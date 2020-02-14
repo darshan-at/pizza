@@ -1,12 +1,15 @@
 export default {
-    userid: null,
+	userid:null,
     pizza: null,
     pizzaName: null,
     base: null,
     baseName: null,
     sauce: null,
     sauceName: null,
-    toppings: [],
+    toppings:{
+        toppingsId:[],
+        selected:false
+},
     cuts: null,
     size: null
 }
