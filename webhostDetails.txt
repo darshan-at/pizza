@@ -1,0 +1,7 @@
+pinkmicwav@gmail.com
+4KucI8RXLwa$F7
+
+database:
+name: pizzeria
+username: pizzeria
+password: pizzeria123
