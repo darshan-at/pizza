@@ -26,8 +26,8 @@ export default class ToppingsSelection extends React.Component {
             .then(response => response.json())
             .then(data => {
                 data = data.map(item => {
-                    item.isSelect = false;
-                    item.selectedClass = this.styles.mainContainer;
+                    item.isSelect = false;                                      //adds the by default select state to each
+                    item.selectedClass = this.styles.mainContainer;             //item and default class 
                     return item;
                 })
                 this.setState({ pizzas: data })
@@ -41,47 +41,41 @@ export default class ToppingsSelection extends React.Component {
                         numColumns={this.state.numColumns}
                         keyExtractor={(item) => item.id}
                         data={this.state.pizzas}
-                        style={this.styles.flatList}
                         renderItem={pizza =>
                             <View
                                 style={pizza.item.selectedClass}>
                                 <ToppingCards
-
                                     imgURL={pizza.item.image}
                                     title={pizza.item.title}
                                     desc={pizza.item.description}
                                     id={pizza.item.id}
                                     price={'Topping price ' + pizza.item.price}
                                     onPressing={() => {
-                                        /*global.toppings = global.toppings + " " + pizza.item.title
-                                        const toppings = global.toppings.split(" ")
-                                        toppings.splice(toppings.indexOf(""), 1)
-                                        global.toppingsId = global.toppingsId + " " + pizza.item.id
-                                        const toppingsId = global.toppingsId.split(" ")
-                                        toppingsId.splice(toppingsId.indexOf(""), 1)
-                                        *///this.props.navigation.push('ReviewScreen')
-                                        //global.toppings.toppingsId=[global.toppings.toppingsId,pizza.item.id]
+                                        //add the inactive topping state to array selectdToppings[]
                                         if (pizza.item.isSelect == false) {
                                             const a = { key: pizza.item.id, isSelect: !pizza.item.isSelect }
                                             this.setState({
                                                 selectedTopping: [...this.state.selectedTopping, a]
                                             });
-                                            
                                         }
-                                        /*else
+                                        else
                                         {
+                                                //deletes the topping from selectedToppings[] 
+                                                //when user diselects the topping item
                                                 let t=this.state.selectedTopping.filter(
                                                 ele=>
-                                                {
-                                                    if(ele.id==pizza.item.id)
-                                                }
-                                            )
-                                        }*/
+                                                {            
+                                                    if(ele.key!==pizza.item.id)
+                                                    {
+                                                        return ele
+                                                    }
+                                                })
+                                            this.setState({selectedTopping:t})  
+                                        }
+                                        //change the style of active topping class to inactive and vice versa 
                                         pizza.item.isSelect = !pizza.item.isSelect
                                         pizza.item.selectedClass = pizza.item.isSelect ? this.styles.selected : this.styles.mainContainer
                                         this.setState(this.state.pizzas)
-                                        console.log(this.state.selectedTopping)
-                                        //this.selectTopping(pizza)
                                     }} />
                             </View>
                         }
@@ -94,23 +88,25 @@ export default class ToppingsSelection extends React.Component {
 
     styles = StyleSheet.create({
         container: {
-
             position: 'absolute',
             width: '100%',
             height: '100%',
-
         },
         mainContainer: {
             height: "100%",
-            marginBottom: 60,
-            paddingHorizontal: 10,
-
+            marginBottom: "10%",
+            flex:1,
+            flexDirection:"column",
+            paddingHorizontal:"1%",
         },
         selected: {
             backgroundColor: "#f9aa33",
-            marginBottom: 60,
-            paddingHorizontal: 10,
-
+            marginBottom: "10%",
+            paddingHorizontal:"1%",
+            flex:1,
+            flexDirection:"column",
+            borderWidth:1,
+            borderRadius:10,
         },
     })
 }

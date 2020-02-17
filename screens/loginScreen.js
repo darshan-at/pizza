@@ -1,7 +1,17 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, ToastAndroid, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, ToastAndroid, AsyncStorage,Modal } from 'react-native';
 import Colors from '../constants/colors'
-
+import {
+    BallIndicator,
+    BarIndicator,
+    DotIndicator,
+    MaterialIndicator,
+    PacmanIndicator,
+    PulseIndicator,
+    SkypeIndicator,
+    UIActivityIndicator,
+    WaveIndicator,
+  } from 'react-native-indicators';
 export default class LoginScreen extends Component {
 
     static navigationOptions = {
@@ -11,9 +21,11 @@ export default class LoginScreen extends Component {
     state = {
         email: '',
         password: '',
+        loading:false,
     }
 
     login=async()=> {
+        this.setState({loading:true})
         fetch("https://unfixed-walls.000webhostapp.com/login.php?email=" + this.state.email + "&password=" + this.state.password)
             .then(response => response.json())
             .then(data => {
@@ -24,6 +36,7 @@ export default class LoginScreen extends Component {
                     AsyncStorage.setItem('userToken', userid);
                     this.props.navigation.navigate('App');
                 }
+                this.setState({loading:false})
             })
     }
 
@@ -60,6 +73,17 @@ export default class LoginScreen extends Component {
                         <Text style={{ fontSize:24 }}>Sign up</Text>
                     </TouchableOpacity>
                 </View>
+                {
+                    this.state.loading &&
+                    <Modal visible={this.state.loading}
+                            transparent={true}
+                            style={{zindex:1}}
+                    >
+                            <View style={styles.loading}>
+                                <MaterialIndicator size={60} animating={this.state.loading} color="white"/>
+                            </View>
+                    </Modal>
+                }
 			</View>
     );
   }
@@ -106,4 +130,10 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: "center",
     },
+    loading:{
+        flex:1,
+        justifyContent:"center",
+        backgroundColor:Colors.primary,
+        opacity:0.5
+    }
 });
