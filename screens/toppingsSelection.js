@@ -62,7 +62,12 @@ export default class ToppingsSelection extends React.Component {
                                         *///this.props.navigation.push('ReviewScreen')
                                         //global.toppings.toppingsId=[global.toppings.toppingsId,pizza.item.id]
                                         if (pizza.item.isSelect == false) {
-                                            const a = { key: pizza.item.id, isSelect: !pizza.item.isSelect }
+                                            const a = {
+                                                key: pizza.item.id,
+                                                isSelect: !pizza.item.isSelect,
+                                                title: pizza.item.title,
+                                                price: pizza.item.price
+                                            }
                                             this.setState({
                                                 selectedTopping: [...this.state.selectedTopping, a]
                                             });
@@ -80,7 +85,6 @@ export default class ToppingsSelection extends React.Component {
                                         pizza.item.isSelect = !pizza.item.isSelect
                                         pizza.item.selectedClass = pizza.item.isSelect ? this.styles.selected : this.styles.mainContainer
                                         this.setState(this.state.pizzas)
-                                        console.log(this.state.selectedTopping)
                                         //this.selectTopping(pizza)
                                     }} />
                             </View>

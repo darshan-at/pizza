@@ -1,7 +1,8 @@
 import React from 'react'
 import { View, 
         StyleSheet,
-        FlatList} from 'react-native'
+        FlatList,
+        AsyncStorage} from 'react-native'
 import { Icon } from 'react-native-elements'
 import BottomBar from '../components/BottomBar'
 import HomeScreenCards from '../components/homeScreenCards'
@@ -32,6 +33,15 @@ export default class HomeScreen extends React.Component {
         pizzas: []
     }
 
+    storeItem = async (pizza) => {
+        try {
+            await AsyncStorage.setItem("pizza", JSON.stringify(pizza))
+            this.props.navigation.push('ReviewOrderPizza')
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     //get data from database
     componentDidMount() {
        fetch("https://unfixed-walls.000webhostapp.com/homeScreen.php")
@@ -55,8 +65,7 @@ export default class HomeScreen extends React.Component {
                             id={pizza.item.id}
                             price={'Starting from '+pizza.item.price}
                             onPressing={()=>{
-                                GLOBAL.pizza = pizza.item.id
-                                this.props.navigation.push('ReviewOrder')
+                                this.storeItem(pizza.item);
                             }}/>
                         }
                     />

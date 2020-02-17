@@ -3,8 +3,9 @@ import { StyleSheet,
         Text, 
         View,
         FlatList,
-        ToastAndroid } from 'react-native'
-import Header from '../components/Header'
+    ToastAndroid,
+    AsyncStorage
+} from 'react-native'
 import BottomBar from '../components/BottomBar'
 import ListContainer from '../components/listContainer'
 import HomeScreenCards from '../components/homeScreenCards'
@@ -15,6 +16,15 @@ export default class PizzaBaseSelection extends React.Component {
     }
     static navigationOptions= {
         title: "Select Pizza Base",
+    }
+
+    storeItem = async (pizza) => {
+        try {
+            await AsyncStorage.setItem("base", JSON.stringify(pizza))
+            this.props.navigation.push('SauceSelect')
+        } catch (e) {
+            console.log(e)
+        }
     }
     
     componentDidMount() {
@@ -28,20 +38,18 @@ export default class PizzaBaseSelection extends React.Component {
             <View style={this.styles.container}>
                 <ListContainer>
                     <FlatList 
-                        keyExtractor = {(item)=>item.id}
-                        data = {this.state.pizzas}
-                        style= {this.styles.flatList}
-                        renderItem = {pizza=>
-                            <HomeScreenCards 
-                            imgURL={pizza.item.image} 
-                            title={pizza.item.title} 
-                            desc={pizza.item.description}
-                            id={pizza.item.id}
-                            price={pizza.item.price+' per inch'}
-                            onPressing={()=>{
-                                GLOBAL.base = pizza.item.id
-                                GLOBAL.baseName = pizza.item.title
-                                this.props.navigation.push('SauceSelect')}}/>
+                        keyExtractor={(item) => item.id}
+                        data={this.state.pizzas}
+                        style={this.styles.flatList}
+                        renderItem={pizza =>
+                            <HomeScreenCards
+                                imgURL={pizza.item.image}
+                                title={pizza.item.title}
+                                desc={pizza.item.description}
+                                id={pizza.item.id}
+                                price={pizza.item.price + ' per inch'}
+                                onPressing={() => {this.storeItem(pizza.item);}}
+                                />
                         }
                     />
                 </ListContainer>

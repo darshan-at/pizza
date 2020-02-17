@@ -3,8 +3,9 @@ import { StyleSheet,
         Text, 
         View,
         FlatList,
-        ToastAndroid } from 'react-native'
-import Header from '../components/Header'
+    ToastAndroid,
+    AsyncStorage
+} from 'react-native'
 import BottomBar from '../components/BottomBar'
 import ListContainer from '../components/listContainer'
 import HomeScreenCards from '../components/homeScreenCards'
@@ -16,7 +17,17 @@ export default class SauceSelection extends React.Component {
     static navigationOptions= {
         title: "Select Sauce",
     }
-    
+
+    storeItem = async (pizza) => {
+        console.log('press')
+        try {
+            await AsyncStorage.setItem("sauce", JSON.stringify(pizza))
+            this.props.navigation.push('ToppingsSelect')
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     componentDidMount() {
         fetch("https://unfixed-walls.000webhostapp.com/pizzaMaking.php?table=sauces")
         .then(response=>response.json())
@@ -37,11 +48,8 @@ export default class SauceSelection extends React.Component {
                             title={pizza.item.title} 
                             desc={pizza.item.description}
                             id={pizza.item.id}
-                            price={'$'+pizza.item.price}
-                            onPressing={()=>{
-                                GLOBAL.sauce = pizza.item.id
-                                GLOBAL.sauceName = pizza.item.title
-                                this.props.navigation.push('ToppingsSelect')}}/>
+                                price={'$' + pizza.item.price}
+                                onPressing={() => { this.storeItem(pizza.item) }} />
                         }
                     />
                 </ListContainer>

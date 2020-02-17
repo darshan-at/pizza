@@ -11,13 +11,9 @@ import ReviewScreen from './screens/review'
 import LoginScreen from './screens/loginScreen'
 import SignupScreen from './screens/signup'
 import AuthLoadingScreen from './screens/AuthLoadingScreen'
+import ReviewOrderPizza from './screens/ReviewOrderPizza'
 
 export default class App extends React.Component {
-
-  setLogged(){
-    this.setState({logged:true})
-    this.forceUpdate()
-  }
 
   render() {
     return(
@@ -40,12 +36,13 @@ const styles = StyleSheet.create({
 
 const AppStack = createStackNavigator(
   {
-    Home: {screen: HomeScreen,},
-    PizzaBase: {screen: PizzaBaseSelection},
-    SauceSelect: {screen: SauceSelection},
-    ToppingsSelect: {screen: ToppingsSelection},
-    ReviewOrder: {screen: ReviewScreen},
-    Profile: { screen: ProfileScreen },
+        Home: {screen: HomeScreen,},
+        PizzaBase: {screen: PizzaBaseSelection},
+        SauceSelect: {screen: SauceSelection},
+        ToppingsSelect: {screen: ToppingsSelection},
+        ReviewOrder: {screen: ReviewScreen},
+        Profile: { screen: ProfileScreen },
+        ReviewOrderPizza: { screen: ReviewOrderPizza }
   },
   {
     initialRouteName: "Home",

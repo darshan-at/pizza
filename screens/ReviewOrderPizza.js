@@ -1,12 +1,13 @@
 import React from 'react'
-import { StyleSheet, 
+import {
+    StyleSheet,
     Text,
-        Button,
+    Button,
     View,
     AsyncStorage,
 } from 'react-native'
 import Colors from '../constants/colors'
-import ReviewCard from '../components/ReviewCard'
+import ReviewCardPizza from '../components/ReviewCardPizza'
 import BottomBar from '../components/BottomBar'
 
 
@@ -17,9 +18,7 @@ export default class ReviewScreen extends React.Component {
     }
 
     state = {
-        base: {},
-        sauce: {},
-        toppings: {}
+        pizza: {}
     }
 
     constructor(props) {
@@ -27,26 +26,18 @@ export default class ReviewScreen extends React.Component {
     }
 
     componentDidMount() {
-        AsyncStorage.getItem("base").then((value) => {
+        AsyncStorage.getItem("pizza").then((value) => {
             value = JSON.parse(value)
-            this.setState({ base: value })
-        })
-        AsyncStorage.getItem("sauce").then((value) => {
-            value = JSON.parse(value)
-            this.setState({ sauce: value })
-        })
-        AsyncStorage.getItem("toppings").then((value) => {
-            value = JSON.parse(value)
-            this.setState({ toppings: value })
+            this.setState({ pizza: value })
         })
     }
 
     render() {
         return (
-                <View style={styles.container}>
-                <ReviewCard title="Item1" attributes={this.state} />
-                    <BottomBar onPressing={() => console.log('payment')}>Next: Payment</BottomBar>
-                </View>
+            <View style={styles.container}>
+                <ReviewCardPizza title="Item1" attributes={this.state} />
+                <BottomBar onPressing={() => console.log('payment')}>Next: Payment</BottomBar>
+            </View>
         )
     }
 }
