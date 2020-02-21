@@ -8,7 +8,7 @@ import GLOBAL from '../constants/global'
 export default class ReviewScreen extends React.Component {
         state = GLOBAL
         componentDidMount() {
-            console.log("Base id" + this.state.baseid)
+        console.log("toppings" + GLOBAL.toppings[0].title)
         if (this.state.pizza != null) {
             
         } else {

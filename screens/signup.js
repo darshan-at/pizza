@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, ToastAndroid, Modal, ScrollView, StatusBar } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, ToastAndroid, Modal, ScrollView, StatusBar, Platform } from 'react-native';
 import Colors from '../constants/colors';
 import { Header } from 'react-navigation-stack';
+import Toast from 'react-native-whc-toast';
 import {
     BallIndicator,
     BarIndicator,
@@ -29,22 +30,44 @@ export default class Signup extends Component {
         respons: "",
         behave: "padding",
     }
-    signup = async () => {
-        this.setState({ loading: true })
-        fetch("https://unfixed-walls.000webhostapp.com/signup.php?email=" + this.state.email + "&password=" + this.state.password + "&fname=" + this.state.fname + "&lname=" + this.state.lname + "&mobile=" + this.state.mobile + "&address=" + this.state.address)
-            .then(response => response.json())
-            .then(data => {
-                if (data == "successfull") {
-                    ToastAndroid.show('Successfully registered', ToastAndroid.SHORT);
-                    this.props.navigation.navigate("Login")
+    signup() {
+
+        const exp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/                         //Email Validaiton expression
+        const exp_pass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
+        if (this.state.mobile.length == 10) {
+            if (exp.test(this.state.email)) {
+                if (exp_pass.test(this.state.password)) {
+                    //Start Loading 
+                    this.setState({ loading: true })
+                    fetch("https://unfixed-walls.000webhostapp.com/signup.php?email=" + this.state.email + "&password=" + this.state.password + "&fname=" + this.state.fname + "&lname=" + this.state.lname + "&mobile=" + this.state.mobile + "&address=" + this.state.address)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data == "successfull") {
+
+                                this.refs.toast.showBottom('Successfully Registered', Toast.Duration.short);
+                                this.props.navigation.navigate("Login")
+                            }
+                            else {
+                                this.refs.toast.showBottom('Invalid Information', Toast.Duration.short);
+                            }
+                            //Stop Loading
+                            this.setState({ loading: false })
+                        })
                 }
                 else {
-                    ToastAndroid.show('Invalid information', ToastAndroid.SHORT);
+                    this.setState({ password: "" })
+                    this.refs.toast.showBottom('Invalid Password', Toast.Duration.short);
                 }
-                this.setState({ loading: false })
-            })
-
-
+            }
+            else {
+                this.setState({ email: "" })
+                this.refs.toast.showBottom('Invalid Email', Toast.Duration.short);
+            }
+        }
+        else {
+            this.setState({ mobile: "" })
+            this.refs.toast.showBottom("Please enter 10 digit mobile number", Toast.Duration.short)
+        }
     }
     render() {
         return (
@@ -80,14 +103,11 @@ export default class Signup extends Component {
 
                         <TextInput
                             style={styles.inputs}
+                            value={this.state.mobile}
                             keyboardType="number-pad"
                             returnKeyType="next"
-                            onChangeText={(mobile) => {
-                                
-                                    this.setState({ mobile: mobile })
-                               
-                            }}    
-                            />
+                            onChangeText={(mobile) => { this.setState({ mobile: mobile }) }}
+                        />
                     </View>
                     <View style={styles.inputView}>
                         <Text style={styles.text}>Address:</Text>
@@ -106,16 +126,22 @@ export default class Signup extends Component {
                         <TextInput
                             style={styles.inputs}
                             returnKeyType="next"
+                            value={this.state.email}
                             keyboardType="email-address"
-                            onChangeText={(email) => { this.setState({ email: email }) }}
+                            onChangeText={(email) => {
+                                this.setState({ email: email })
+                            }}
                             onFocus={() => this.refs.scroll.scrollToEnd()}
                         />
                     </View>
                     <View style={styles.inputView}>
                         <Text style={styles.textPassword}>Password:</Text>
                         <TextInput
+                            placeholder="6 to 20 with MIN. 1 number and lower and upper case"
+                            placeholderTextColor="#262624"
                             style={styles.inputs}
                             secureTextEntry
+                            value={this.state.password}
                             onChangeText={(password) => { this.setState({ password: password }) }}
                             onFocus={() => this.refs.scroll.scrollToEnd()}
                         />
@@ -138,6 +164,7 @@ export default class Signup extends Component {
                             </View>
                         </Modal>
                     }
+                    <Toast ref="toast" />
                 </ScrollView>
             </KeyboardAvoidingView>
         );

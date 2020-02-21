@@ -6,10 +6,7 @@ export default {
     baseName: null,
     sauce: null,
     sauceName: null,
-    toppings:{
-        toppingsId:[],
-        selected:false
-},
+    toppings:[],
     cuts: null,
     size: null
 }

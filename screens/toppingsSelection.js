@@ -53,24 +53,27 @@ export default class ToppingsSelection extends React.Component {
                                     onPressing={() => {
                                         //add the inactive topping state to array selectdToppings[]
                                         if (pizza.item.isSelect == false) {
-                                            const a = { key: pizza.item.id, isSelect: !pizza.item.isSelect }
+                                            const a =
+                                            {
+                                                id: pizza.item.id,
+                                                title: pizza.item.title,
+                                                price: pizza.item.price,
+                                                isSelect: !pizza.item.isSelect,
+                                            }
                                             this.setState({
                                                 selectedTopping: [...this.state.selectedTopping, a]
                                             });
                                         }
-                                        else
-                                        {
-                                                //deletes the topping from selectedToppings[] 
-                                                //when user diselects the topping item
-                                                let t=this.state.selectedTopping.filter(
-                                                ele=>
-                                                {            
-                                                    if(ele.key!==pizza.item.id)
-                                                    {
+                                        else {
+                                            //deletes the topping from selectedToppings[] 
+                                            //when user diselects the topping item
+                                            let t = this.state.selectedTopping.filter(
+                                                ele => {
+                                                    if (ele.id !== pizza.item.id) {
                                                         return ele
                                                     }
                                                 })
-                                            this.setState({selectedTopping:t})  
+                                            this.setState({ selectedTopping: t })
                                         }
                                         //change the style of active topping class to inactive and vice versa 
                                         pizza.item.isSelect = !pizza.item.isSelect
@@ -81,7 +84,13 @@ export default class ToppingsSelection extends React.Component {
                         }
                     />
                 </ListContainer>
-                <BottomBar onPressing={() => this.props.navigation.push('ReviewOrder')}>Next: Review Order</BottomBar>
+                <BottomBar onPressing={() => {
+                    //Assign GLOBAL TOPPINGS as selected toppings
+                    global.toppings = this.state.selectedTopping;
+                    this.props.navigation.push('ReviewOrder')
+                
+                }}>
+                Next: Review Order</BottomBar>
             </View>
         )
     }
@@ -95,18 +104,18 @@ export default class ToppingsSelection extends React.Component {
         mainContainer: {
             height: "100%",
             marginBottom: "10%",
-            flex:1,
-            flexDirection:"column",
-            paddingHorizontal:"1%",
+            flex: 1,
+            flexDirection: "column",
+            paddingHorizontal: "1%",
         },
         selected: {
             backgroundColor: "#f9aa33",
             marginBottom: "10%",
-            paddingHorizontal:"1%",
-            flex:1,
-            flexDirection:"column",
-            borderWidth:1,
-            borderRadius:10,
+            paddingHorizontal: "1%",
+            flex: 1,
+            flexDirection: "column",
+            borderWidth: 1,
+            borderRadius: 10,
         },
     })
 }
