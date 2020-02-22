@@ -22,6 +22,7 @@ export default class ReviewScreen extends React.Component {
     }
 
     componentDidMount() {
+        fetch()
         AsyncStorage.getItem('userToken')
             .then((data) => {
                 this.setState({ userid: data })
