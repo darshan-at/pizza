@@ -1,9 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\constants",
+    "\\components",
     "\\screens"
   ],
-  "SelectedNode": "\\App.js",
+  "SelectedNode": "\\screens\\loginScreen.js",
   "PreviewInSolutionExplorer": false
 }

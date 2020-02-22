@@ -19,7 +19,6 @@ export default class SauceSelection extends React.Component {
     }
 
     storeItem = async (pizza) => {
-        console.log('press')
         try {
             await AsyncStorage.setItem("sauce", JSON.stringify(pizza))
             this.props.navigation.push('ToppingsSelect')

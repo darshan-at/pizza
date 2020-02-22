@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import Colors from '../constants/colors'
-import { Dropdown } from 'react-native-material-dropdown'
 
 export default class ReviewCardPizza extends React.Component {
     render() {
