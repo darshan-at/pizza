@@ -4,7 +4,6 @@ import { View,
         Text, 
         Image, 
         TouchableOpacity } from 'react-native'
-import GLOBAL from '../constants/global'
 export default function ToppingCards(props) {
     return(
         <TouchableOpacity

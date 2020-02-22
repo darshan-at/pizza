@@ -22,7 +22,6 @@ export default class ReviewScreen extends React.Component {
     }
 
     componentDidMount() {
-        //fetch address here
         AsyncStorage.getItem('userToken')
             .then((data) => {
                 this.setState({ userid: data })
@@ -36,28 +35,31 @@ export default class ReviewScreen extends React.Component {
             value = JSON.parse(value)
             this.setState({ sauce: value })
         })
+        AsyncStorage.getItem("toppings").then((value) => {
+            value = JSON.parse(value)
+            let totPrice = 0
+            value.map((item) => {
+                totPrice = totPrice + Number(item.price)
+            })
+            this.setState({ toppings: value, toppingsPrice: totPrice })
+        })
         .done(() => {
                 this.makeBill();
         })
-        /*AsyncStorage.getItem("toppings").then((value) => {
-            value = JSON.parse(value)
-            this.setState({ toppings: value })
-        })*/
     }
 
     makeBill = () => {
-        let toppingPrice = 0
-        this.state.toppings.map((item) => { toppingPrice = toppingPrice + Number(item.price) })
-        this.setState({ toppingsPrice: toppingPrice })
-        let totalPrice = Number(this.state.base.price) + Number(this.state.sauce.price) + this.state.toppingsPrice
+        let totalPrice = Number(this.state.base.price) + Number(this.state.sauce.price) + Number(this.state.toppingsPrice)
+        totalPrice = Math.round(totalPrice * 100) / 100
         this.setState({ totalPrice: totalPrice })
         let Gst = Math.round(this.state.totalPrice * 0.12)
+        Gst = Math.round(Gst * 100) / 100
         let packing = 20
-        let taxes = Gst;
-        this.setState({ totalPrice: totalPrice, taxes: taxes })
+        this.setState({ totalPrice: totalPrice, taxes: Gst })
     }
 
-    handlePayment = () => { 
+    handlePayment = () => {
+        //give order here
     }
 
     state = {
@@ -65,34 +67,18 @@ export default class ReviewScreen extends React.Component {
         base: {},
         sauce: {},
         userid:null,
-        toppings: [
-            {
-                "id": 1,
-                "title": "onion",
-                "price": 4
-            },
-            {
-                "id": 5,
-                "title": "pepperoni",
-                "price": 2
-            },
-            {
-                "id": 4,
-                "title": "tomato",
-                "price": 10
-            },
-        ],
+        toppings: [],
         priceBaseOg: null,
         toppingsPrice: null,
         totalPrice: null,
         taxes: null,
         slices: 4,
         size: '6',
+        paymentOption: "cod",
     }
 
     updateSlices = (slice) => {
         this.setState({ slices: slice })
-        console.log("Slices" + this.state.slices)
     }
 
     setBasePrice = () => {
@@ -105,6 +91,10 @@ export default class ReviewScreen extends React.Component {
         this.setState({size: ItemValue},()=>this.setBasePrice())
     }
 
+    updatePayment = (itemValue) => {
+        
+    }
+
     render() {
 
         let cuts = ["4", "6", "8", "10", "12"];
@@ -114,10 +104,21 @@ export default class ReviewScreen extends React.Component {
             <View style={styles.container}>
                 <ScrollView style={styles.Container}>
 
-                    {/*address card*/}
+                    {/*payment options*/}
                     <View style={styles.card}>
-                        <Text style={{ color: Colors.accent, fontSize: 18, }}>Delivering To:</Text>
-                        <Text style={styles.contentText}>{this.state.address}</Text>
+                        <Text style={{ color: Colors.accent, fontSize: 16, paddingLeft: 10, paddingBottom: 10 }}>
+                            Payment Options</Text>
+                        <Picker
+                            style={[styles.picker, { width: '80%' }]}
+                            selectedValue={this.state.paymentOption}
+                            mode="dropdown"
+                            onValueChange={(itemValue, itemIndex) => { this.setState({ paymentOption: itemValue }) }}
+                        >
+                            <Picker.Item key={Math.random()} label="Cash on Delivery" value="cod" />
+                            <Picker.Item key={Math.random()} label="Takeout from store" value="takeout" />
+                            <Picker.Item key={Math.random()} label="Cash on Delivery" value="cod" />
+
+                        </Picker>
                     </View>
 
                     {/*content card*/}
@@ -145,7 +146,7 @@ export default class ReviewScreen extends React.Component {
                         <View style={styles.toppingContent}>
                             {this.state.toppings
                                 .map((item) => {
-                                    return (<Topping key={item.id} topping={item} key={item.id} />)
+                                    return (<Topping key={Math.random()} topping={item} key={item.id} />)
                                 })
                             }
                         </View>
@@ -164,7 +165,7 @@ export default class ReviewScreen extends React.Component {
                                 mode="dropdown"
                                 onValueChange={(itemValue, itemIndex) => { this.updateSlices(itemValue) }}>
                                 {cuts.map((item) => {
-                                        return (<Picker.Item key={item.index} label={item} value={item} />
+                                    return (<Picker.Item key={Math.random()} label={item} value={item} />
                                     )
                                 })}
                             </Picker>
@@ -180,7 +181,7 @@ export default class ReviewScreen extends React.Component {
                                 mode="dropdown"
                                 onValueChange={(itemValue, itemIndex) => {this.updateSize(itemValue) }}>
                                 {sizes.map((item) => {
-                                        return (<Picker.Item key={item.id} label={item} value={item} />
+                                    return (<Picker.Item key={Math.random()} label={item} value={item} />
                                     )
                                 })}
                             </Picker>
@@ -225,9 +226,16 @@ export default class ReviewScreen extends React.Component {
                             </View>
                         </View>
                     </View>
+
+                    {/*address card*/}
+                    <View style={styles.card}>
+                        <Text style={{ color: Colors.accent, fontSize: 18, }}>Delivering To:</Text>
+                        <Text style={styles.contentText}>{this.state.address}</Text>
+                    </View>
+
                 </ScrollView>
                     <BottomBar onPressing={() => this.handlePayment()}>Confirm Order</BottomBar>
-                </View>
+            </View>
         )
     }
 }
