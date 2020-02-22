@@ -1,8 +1,8 @@
 {
+  "urlRandomness": "yt-bcd",
   "hostType": "lan",
   "lanType": "ip",
   "dev": true,
   "minify": false,
-  "urlRandomness": "jm-756",
   "https": false
 }
