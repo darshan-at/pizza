@@ -71,7 +71,6 @@ export default class ToppingsSelection extends React.Component {
                                             this.setState({
                                                 selectedTopping: [...this.state.selectedTopping, a]
                                             });
-                                            
                                         }
                                         /*else
                                         {
