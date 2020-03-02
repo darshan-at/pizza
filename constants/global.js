@@ -1,5 +1,11 @@
 export default {
-	userid:null,
+    userid:null,
+    email:null,
+    mobile:null,
+    address:null,
+    fname:null,
+    lname:null,
+    password:null,
     pizza: null,
     pizzaName: null,
     base: null,

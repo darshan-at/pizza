@@ -13,6 +13,8 @@ import SignupScreen from './screens/signup'
 import AuthLoadingScreen from './screens/AuthLoadingScreen'
 import ReviewOrderPizza from './screens/ReviewOrderPizza'
 import OrderScreen from './screens/OrderScreen'
+import HistoryScreen from './screens/history'
+import EditScreen from './screens/EditScreen'
 
 export default class App extends React.Component {
 
@@ -43,8 +45,11 @@ const AppStack = createStackNavigator(
         ToppingsSelect: {screen: ToppingsSelection},
         ReviewOrder: {screen: ReviewScreen},
         Profile: { screen: ProfileScreen },
+        EditProfile:{screen:EditScreen},
         ReviewOrderPizza: { screen: ReviewOrderPizza },
-        Order: { screen: OrderScreen }
+        Order: { screen: OrderScreen },
+        History:{screen:HistoryScreen}
+
   },
   {
     initialRouteName: "Home",
