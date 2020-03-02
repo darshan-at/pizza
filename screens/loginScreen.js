@@ -5,6 +5,8 @@ import Toast from 'react-native-whc-toast';
 import {
     MaterialIndicator,
 } from 'react-native-indicators';
+import global from '../constants/global'
+import {NavigationEvents } from 'react-navigation';
 export default class LoginScreen extends Component {
 
     static navigationOptions = {
@@ -27,11 +29,18 @@ export default class LoginScreen extends Component {
                 fetch("https://unfixed-walls.000webhostapp.com/login.php?email=" + this.state.email + "&password=" + this.state.password)
                     .then(response => response.json())
                     .then(data => {
-                        const { userid } = data;
-                        if (userid == null) {
+                        //const { userid } = data;
+                        if (data['userid'] == null) {
                             ToastAndroid.show('Invalid email/password', ToastAndroid.SHORT);
                         } else {
-                            AsyncStorage.setItem('userToken', userid);
+                            AsyncStorage.setItem('userToken', data['userid']);
+                            AsyncStorage.setItem('fname',data['fname']);
+                            AsyncStorage.setItem('lname',data['lname']);
+                            AsyncStorage.setItem('pass',data['password']);
+                            AsyncStorage.setItem('address',data['address']);
+                            AsyncStorage.setItem('mobile',data['mobile']);
+                            AsyncStorage.setItem('email',this.state.email);
+                            
                             this.props.navigation.navigate('App');
                         }
                         this.setState({ loading: false })
@@ -51,6 +60,12 @@ export default class LoginScreen extends Component {
     render() {
         return (
             <View style={styles.MainContainer}>
+                <NavigationEvents
+                    onDidFocus={()=>
+                    {
+                        this.setState({email:"",password:""})                   //Clears the input field when it is navigated
+                    }}                                                            //back to login screen 
+                />
                 <Text style={styles.text}>Email:</Text>
                 <View style={styles.inputView}>
                     <TextInput
