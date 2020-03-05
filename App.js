@@ -15,6 +15,7 @@ import ReviewOrderPizza from './screens/ReviewOrderPizza'
 import OrderScreen from './screens/OrderScreen'
 import HistoryScreen from './screens/history'
 import EditScreen from './screens/EditScreen'
+import DetailedHistory from './screens/HistoryDetailed'
 
 export default class App extends React.Component {
 
@@ -48,8 +49,8 @@ const AppStack = createStackNavigator(
         EditProfile:{screen:EditScreen},
         ReviewOrderPizza: { screen: ReviewOrderPizza },
         Order: { screen: OrderScreen },
-        History:{screen:HistoryScreen}
-
+        History: { screen: HistoryScreen },
+        Details: { screen: DetailedHistory }
   },
   {
     initialRouteName: "Home",

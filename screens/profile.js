@@ -8,42 +8,46 @@ import {
   ScrollView,
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import global from '../constants/global';
 import colors from '../constants/colors';
 import { Icon } from 'react-native-elements';
-let _this = null;
 
 export default class Profile extends React.Component {
-  componentDidMount() {
-    _this = this;
-  }
-  handleSignOut = async () => {
-    await AsyncStorage.clear();
-    global.userid = null;
-    global.email = null;
-    global.fname = null;
-    global.lname = null;
-    global.address = null;
-    global.mobile = null;
-    global.password = null;
-    this.props.navigation.navigate('Auth');
-  };
 
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'Profile',
-      headerRight: (
-        <Icon
-          containerStyle={{ paddingRight: 10 }}
-          name="sign-out"
-          type="font-awesome"
-          color="#fa9933"
-          underlayColor="#121212"
-          onPress={() => _this.handleSignOut()}
-        />
-      ),
+    state = {
+        userid: null,
+        user: {}
+    }
+
+    componentDidMount() {
+        AsyncStorage.getItem("userToken")
+            .then((data) => this.setState({ userid: data }))
+            .then(() =>
+                fetch("https://unfixed-walls.000webhostapp.com/getUser.php?userid=" + this.state.userid)
+                    .then((response) => response.json())
+                    .then((val) => this.setState({ user: val }))
+                    .then(() => console.log(this.state.user))
+             )
+    }
+    handleSignOut = async () => {
+        await AsyncStorage.clear();
+        this.props.navigation.navigate('Auth');
     };
-  };
+
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: 'Profile',
+            headerRight: (
+                <Icon
+                    containerStyle={{ paddingRight: 10 }}
+                    name="sign-out"
+                    type="font-awesome"
+                    color="#fa9933"
+                    underlayColor="#121212"
+                    onPress={() => _this.handleSignOut()}
+                />
+            ),
+        };
+    };
 
   render() { 
     return (
@@ -59,13 +63,13 @@ export default class Profile extends React.Component {
           />
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <Text
-              style={{
-                color: colors.accent,
-                fontSize: 25,
-                paddingLeft: '1%',
-                textAlignVertical: 'center',
-              }}>
-              {global.fname + ' ' + global.lname}
+                        style={{
+                            color: colors.accent,
+                            fontSize: 25,
+                            paddingLeft: '1%',
+                            textAlignVertical: 'center',
+                        }}>
+                        {this.state.user.fname + ' ' + this.state.user.lname}
             </Text>
           </View>
         </View>
@@ -96,22 +100,22 @@ export default class Profile extends React.Component {
 
           <View style={styles.card}>
             <Text style={styles.textKey}>Email</Text>
-            <Text style={styles.textValue}>{global.email}</Text>
+                    <Text style={styles.textValue}>{this.state.user.email}</Text>
           </View>
 
-          <View style={styles.card}>
+          {/*<View style={styles.card}>
             <Text style={styles.textKey}>Password</Text>
             <Text style={styles.textValue}>{global.password}</Text>
-          </View>
+          </View>*/}
 
           <View style={styles.card}>
             <Text style={styles.textKey}>Mobile Number</Text>
-            <Text style={styles.textValue}>{global.mobile}</Text>
+                    <Text style={styles.textValue}>{this.state.user.mobileNo}</Text>
           </View>
 
           <View style={styles.card}>
             <Text style={styles.textKey}>Address</Text>
-            <Text style={styles.textValue}>{global.address}</Text>
+                    <Text style={styles.textValue}>{this.state.user.address}</Text>
           </View>
 
           <View

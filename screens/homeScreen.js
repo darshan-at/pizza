@@ -49,7 +49,7 @@ export default class HomeScreen extends React.Component {
        fetch("https://unfixed-walls.000webhostapp.com/homeScreen.php")
        .then(response=>response.json())
        .then(data=>this.setState({pizzas: data}))
-        retrieveData();
+        //retrieveData();
 }
     render() {
         return(

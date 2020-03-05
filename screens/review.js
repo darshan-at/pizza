@@ -4,6 +4,7 @@ import { StyleSheet,
     AsyncStorage,
     ScrollView,
     Picker,
+    ToastAndroid,
     Text,
 } from 'react-native'
 import Colors from '../constants/colors'
@@ -22,7 +23,6 @@ export default class ReviewScreen extends React.Component {
     }
 
     componentDidMount() {
-        fetch()
         AsyncStorage.getItem('userToken')
             .then((data) => {
                 this.setState({ userid: data })
@@ -55,12 +55,31 @@ export default class ReviewScreen extends React.Component {
         this.setState({ totalPrice: totalPrice })
         let Gst = Math.round(this.state.totalPrice * 0.12)
         Gst = Math.round(Gst * 100) / 100
-        let packing = 20
         this.setState({ totalPrice: totalPrice, taxes: Gst })
     }
 
-    handlePayment = () => {
-        //give order here
+    handlePayment = async () => {
+        let toppings = "";
+        await this.state.toppings.map((item) => {
+            toppings = toppings + item.id + ", "
+        });
+        let tid;
+        let query = "https://unfixed-walls.000webhostapp.com/orderRequest.php?baseid=" + this.state.base.id
+            + "&toppings=" + toppings + "&sauceid=" + this.state.sauce.id + "&userid=" + this.state.userid
+            + "&slices=" + this.state.slices + "&size=" + this.state.size + "&total=" + this.state.totalPrice;
+        console.log(query)
+        let query1 = "https://unfixed-walls.000webhostapp.com/insertPrices.php?taxes=" + this.state.taxes
+            + "&packing=" + this.state.packing + "&basePrice=" + this.state.base.price
+            + "&saucePrice=" + this.state.sauce.price + "&toppingsPrice=" + this.state.toppingsPrice
+            + "&tid="
+        fetch(query)
+            .then((response) => response.json())
+            .then((val) => query1 = query1+val.tid)
+            .then(() => fetch(query1)
+                .then((val) => { ToastAndroid.show('Successfully Ordered', ToastAndroid.SHORT); })
+                .then(() => { this.props.navigation.navigate("Home") })
+                .catch((error) => { ToastAndroid.show('Failed to place order', ToastAndroid.SHORT) })
+                )
     }
 
     state = {
@@ -75,6 +94,7 @@ export default class ReviewScreen extends React.Component {
         taxes: null,
         slices: 4,
         size: '6',
+        packing: 20,
         paymentOption: "cod",
     }
 
@@ -90,10 +110,6 @@ export default class ReviewScreen extends React.Component {
 
     updateSize = (ItemValue) => {
         this.setState({size: ItemValue},()=>this.setBasePrice())
-    }
-
-    updatePayment = (itemValue) => {
-        
     }
 
     render() {
@@ -147,7 +163,7 @@ export default class ReviewScreen extends React.Component {
                         <View style={styles.toppingContent}>
                             {this.state.toppings
                                 .map((item) => {
-                                    return (<Topping key={Math.random()} topping={item} key={item.id} />)
+                                    return (<Topping key={Math.random()} topping={item} />)
                                 })
                             }
                         </View>
@@ -222,7 +238,7 @@ export default class ReviewScreen extends React.Component {
                                     Grand Total
                             </Text>
                                 <Text style={[styles.contentText, { paddingRight: 10, color: Colors.accent, opacity: 1 }]}>
-                                    {this.state.totalPrice + this.state.taxes + 20}
+                                    {this.state.totalPrice + this.state.taxes + this.state.packing}
                                 </Text>
                             </View>
                         </View>

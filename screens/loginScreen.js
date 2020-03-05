@@ -5,7 +5,6 @@ import Toast from 'react-native-whc-toast';
 import {
     MaterialIndicator,
 } from 'react-native-indicators';
-import global from '../constants/global'
 import {NavigationEvents } from 'react-navigation';
 export default class LoginScreen extends Component {
 
@@ -43,6 +42,10 @@ export default class LoginScreen extends Component {
                             
                             this.props.navigation.navigate('App');
                         }
+                        this.setState({ loading: false })
+                    })
+                    .catch(error => {
+                        this.refs.toast.showCenter('Network Problem/ Try again', Toast.Duration.short)
                         this.setState({ loading: false })
                     })
             }
