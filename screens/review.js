@@ -61,7 +61,7 @@ export default class ReviewScreen extends React.Component {
     handlePayment = async () => {
         let toppings = "";
         await this.state.toppings.map((item) => {
-            toppings = toppings + item.id + ", "
+            toppings = toppings + item.title + ", "
         });
         let tid;
         let query = "https://unfixed-walls.000webhostapp.com/orderRequest.php?baseid=" + this.state.base.id

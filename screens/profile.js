@@ -25,7 +25,6 @@ export default class Profile extends React.Component {
                 fetch("https://unfixed-walls.000webhostapp.com/getUser.php?userid=" + this.state.userid)
                     .then((response) => response.json())
                     .then((val) => this.setState({ user: val }))
-                    .then(() => console.log(this.state.user))
              )
     }
     handleSignOut = async () => {

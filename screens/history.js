@@ -27,16 +27,15 @@ export default class Profile extends Component {
       <View>
             <View>
                 <FlatList
-                    keyExtractor={(item) => item.tid}
+                    keyExtractor={(item) => item.id}
                     data={this.state.history}
                     renderItem={order =>
-                        <View key={order.id }>
+                        <View key={order.id}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    console.log(order.item.tid + "pressed");
-                                    this.props.navigation.navigate('Details', {orderid: order.item.tid})
+                                    this.props.navigation.navigate('Details', {orderid: order.item.id})
                                 }} >
-                                <Text>id={order.item.tid}</Text>
+                                <Text>id={order.item.id}</Text>
                             </TouchableOpacity>
                         </View>
                     }
