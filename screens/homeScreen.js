@@ -7,9 +7,7 @@ import { Icon } from 'react-native-elements'
 import BottomBar from '../components/BottomBar'
 import HomeScreenCards from '../components/homeScreenCards'
 import ListContainer from '../components/listContainer'
-import global from '../constants/global'
-import { retrieveData } from '../constants/function';
-
+import colors from '../constants/colors'
 
 export default class HomeScreen extends React.Component {
 
@@ -21,8 +19,8 @@ export default class HomeScreen extends React.Component {
                     containerStyle={{paddingRight: 10}}
                     name='person'
                     type='material'
-                    color='#fa9933'
-                    underlayColor='#121212'
+                    color={colors.accent}
+                    underlayColor={colors.primary}
                     onPress={()=>{
                         navigation.push("Profile");  
                     }}
@@ -49,7 +47,7 @@ export default class HomeScreen extends React.Component {
        fetch("https://unfixed-walls.000webhostapp.com/homeScreen.php")
        .then(response=>response.json())
        .then(data=>this.setState({pizzas: data}))
-        //retrieveData();
+        
 }
     render() {
         return(

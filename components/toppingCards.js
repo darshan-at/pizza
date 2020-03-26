@@ -28,10 +28,10 @@ const styles = StyleSheet.create({
         flexDirection:"column",
     },
     image: {
-        
        //position: 'absolute',
-        height: 170,
+        height:170,
         width: "100%",
+        resizeMode:"contain"
         
     },
     textContainer: {

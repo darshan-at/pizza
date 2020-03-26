@@ -16,6 +16,7 @@ import OrderScreen from './screens/OrderScreen'
 import HistoryScreen from './screens/history'
 import EditScreen from './screens/EditScreen'
 import DetailedHistory from './screens/HistoryDetailed'
+import colors from './constants/colors'
 
 export default class App extends React.Component {
 
@@ -56,9 +57,9 @@ const AppStack = createStackNavigator(
     initialRouteName: "Home",
     defaultNavigationOptions: {
       headerStyle: {
-        backgroundColor: '#121212',
+        backgroundColor: colors.primary,
       },
-      headerTintColor: '#fa9933',
+      headerTintColor: colors.accent,
       headerTitleStyle: {
         fontWeight: 'bold',
       },
@@ -74,9 +75,9 @@ const AuthStack = createStackNavigator(
     {
         defaultNavigationOptions: {
             headerStyle: {
-                backgroundColor: '#121212',
+                backgroundColor: colors.primary,
             },
-            headerTintColor: '#fa9933',
+            headerTintColor: colors.accent,
             headerTitleStyle: {
                 fontWeight: 'bold',
             },
