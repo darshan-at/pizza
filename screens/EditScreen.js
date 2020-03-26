@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, ToastAndroid, Modal, ScrollView, StatusBar, Platform, AsyncStorage } from 'react-native';
-import Colors from '../constants/colors';
+import colors from '../constants/colors';
 import { Header } from 'react-navigation-stack';
 import Toast from 'react-native-whc-toast';
-import global from '../constants/global';
 import { retrieveData } from '../constants/function';
 import {
     BallIndicator,
@@ -22,18 +21,40 @@ export default class EditScreen extends Component {
             title: "Edit Profile",
         }
     state = {
-        email: global.email,
-        password: global.password,
-        fname: global.fname,
-        lname: global.lname,
-        address: global.address,
-        mobile: global.mobile,
-        loading: false,
+        userid:null,
+        user:null,
+        email: "",
+        password:"",
+        fname: "",
+        lname: "",
+        address:"",
+        mobile: "",
+        loading: true,
         respons: "",
         behave: "padding",
     }
 
+    componentDidMount(){
+        AsyncStorage.getItem("userToken")
+      .then((data) => this.setState({ userid: data }))
+      .then(() => {
 
+        fetch("https://unfixed-walls.000webhostapp.com/getUser.php?userid=" + this.state.userid)
+          .then((response) => response.json())
+          .then((val) => this.setState({ user: val }))
+          .then(()=>{
+              this.setState({email:this.state.user.email})
+              this.setState({password:this.state.user.password})
+              this.setState({fname:this.state.user.fname})
+              this.setState({lname:this.state.user.lname})
+              this.setState({mobile:this.state.user.mobileNo})
+              this.setState({address:this.state.user.address})
+          })
+          .then(()=>{this.setState({loading:false})})
+
+
+      })
+    }
     update = async () => {
 
         const exp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/                         //Email Validaiton expression
@@ -43,7 +64,7 @@ export default class EditScreen extends Component {
                 if (exp_pass.test(this.state.password)) {
                     //Start Loading 
                     this.setState({ loading: true })
-                    fetch("https://unfixed-walls.000webhostapp.com/update.php?id=" + global.userid + "&email=" + this.state.email + "&password=" + this.state.password + "&fname=" + this.state.fname + "&lname=" + this.state.lname + "&mobile=" + this.state.mobile + "&address=" + this.state.address)
+                    fetch("https://unfixed-walls.000webhostapp.com/update.php?id=" + this.state.userid + "&email=" + this.state.email + "&password=" + this.state.password + "&fname=" + this.state.fname + "&lname=" + this.state.lname + "&mobile=" + this.state.mobile + "&address=" + this.state.address)
                         .then(response => response.json())
                         .then(data => {
                             if (data == "successfull") {
@@ -180,6 +201,17 @@ export default class EditScreen extends Component {
                     }
                     <Toast ref="toast" />
                 </ScrollView>
+                {
+          this.state.loading &&
+          <Modal visible={this.state.loading}
+            transparent={true}
+            style={{ zindex: 1 }}
+          >
+            <View style={styles.loading}>
+              <MaterialIndicator size={60} animating={this.state.loading} color="white" />
+            </View>
+          </Modal>
+        }
             </KeyboardAvoidingView>
         );
     }
@@ -199,7 +231,7 @@ const styles = StyleSheet.create({
     inputs: {
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
-        borderBottomColor: Colors.accent,
+        borderBottomColor: colors.accent,
         borderWidth: 1,
         paddingLeft: "4%",
         height: 35,
@@ -208,22 +240,22 @@ const styles = StyleSheet.create({
     },
     text: {
         marginTop: "4%",
-        color: Colors.accent,
+        color: colors.accent,
         paddingLeft: "4%",
         fontSize: 20,
     },
     textPassword: {
         marginTop: "4%",
-        color: Colors.accent,
+        color: colors.accent,
         paddingLeft: "4%",
         fontSize: 20,
     },
     button: {
-        backgroundColor: Colors.accent,
+        backgroundColor: colors.accent,
         width: '89%',
         alignItems: "center",
         justifyContent: "center",
-        color: Colors.primary,
+        color: colors.primary,
         height: "25%",
         borderRadius: 10,
         marginTop: "1%",
@@ -236,9 +268,7 @@ const styles = StyleSheet.create({
     loading: {
         flex: 1,
         justifyContent: "center",
-        backgroundColor: Colors.primary,
-        opacity: 0.5,
-
-
-    }
+        backgroundColor: colors.primary,
+        opacity: 0.5
+      }
 });

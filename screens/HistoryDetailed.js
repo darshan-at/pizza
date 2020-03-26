@@ -1,17 +1,19 @@
 import React from 'react'
-import { Text, StyleSheet, View, ToastAndroid } from 'react-native'
-import Color from '../constants/colors'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Text, StyleSheet, View, ToastAndroid, Modal } from 'react-native'
+import colors from '../constants/colors'
+import {
+	MaterialIndicator,
+} from 'react-native-indicators';
 
 
 export default class DetailedHistory extends React.Component {
 
 	static navigationOptions = {
-		title: "History",
+		title: "History Details",
 	}
 
 	state = {
-
+		loading: true,
 	}
 
 	constructor(props) {
@@ -23,16 +25,16 @@ export default class DetailedHistory extends React.Component {
 			+ this.props.navigation.state.params.orderid
 		fetch(query)
 			.then((response) => response.json())
-			.then((val)=>this.setState(val))
-			.then(()=>console.log(this.state))
+			.then((val) => this.setState(val))
+			.then(() => { this.setState({ loading: false }) })
 	}
 
-	handleRepeat = () =>{
-		let query = "https://unfixed-walls.000webhostapp.com/repeatOrder.php?tid="+this.state.tid
+	handleRepeat = () => {
+		let query = "https://unfixed-walls.000webhostapp.com/repeatOrder.php?tid=" + this.state.tid
 		fetch(query)
-            .then((val) => { ToastAndroid.show('Successfully Ordered', ToastAndroid.SHORT); })
-            .then(() => { this.props.navigation.navigate("Home") })
-            .catch((error) => { ToastAndroid.show('Failed to place order', ToastAndroid.SHORT) })
+			.then((val) => { ToastAndroid.show('Successfully Ordered', ToastAndroid.SHORT); })
+			.then(() => { this.props.navigation.navigate("Home") })
+			.catch((error) => { ToastAndroid.show('Failed to place order', ToastAndroid.SHORT) })
 	}
 
 	render() {
@@ -50,7 +52,7 @@ export default class DetailedHistory extends React.Component {
 							<Detail name="Slices" name2={this.state.slices} />
 							<Detail name="Size" name2={this.state.size} />
 							<Text style={styles.header}>DETAILED BILL</Text>
-							<Bill state={this.state} />	
+							<Bill state={this.state} />
 						</View>) :
 						(<View>
 							<Text style={styles.header}>CONTENTS</Text>
@@ -60,8 +62,19 @@ export default class DetailedHistory extends React.Component {
 							<Detail name="Slices" name2={this.state.slices} />
 							<Detail name="Size" name2={this.state.size} />
 							<Text style={styles.header}>DETAILED BILL</Text>
-							<Bill state={this.state} />	
+							<Bill state={this.state}/>
 						</View>)
+				}
+				{
+					this.state.loading &&
+					<Modal visible={this.state.loading}
+						transparent={true}
+						style={{ zindex: 1 }}
+					>
+						<View style={styles.loading}>
+							<MaterialIndicator size={60} animating={this.state.loading} color="white" />
+						</View>
+					</Modal>
 				}
 				{/* <TouchableOpacity style={styles.repeatButton} onPress={()=>{this.handleRepeat()}}>
 					<Text style={{fontSize: 20, fontWeight: "100"}}>Repeat Order</Text>
@@ -83,37 +96,37 @@ class Detail extends React.Component {
 					<Text style={styles.nameText}>{this.props.name2}</Text>
 				</View>
 			</View>
-			)
+		)
 	}
 }
 
 class Bill extends React.Component {
 
-	render(){
-		return(
+	render() {
+		return (
 			<View>
 				<Detail name="Order Total" name2={this.props.state.total} />
 				<Detail name="Taxes" name2={this.props.state.taxes} />
 				<Detail name="Packing and Delivery" name2={this.props.state.packing} />
-				<Detail name="Grand Total" 
-				name2={Number(this.props.state.total)+Number(this.props.state.packing)+Number(this.props.state.taxes)} />
+				<Detail name="Grand Total"
+					name2={Number(this.props.state.total) + Number(this.props.state.packing) + Number(this.props.state.taxes)} />
 
 
 				<Text style={styles.header}>Delivery Details</Text>
 				<View style={styles.methodStatus}>
 					<Text style={styles.nameText}>Payment Method</Text>
-					<Text style={styles.nameText}>Cash on Delivery</Text>
+					<Text style={styles.nameText}>{this.props.state.payment}</Text>
 				</View>
 				<View style={styles.methodStatus}>
 					<Text style={styles.nameText}>Status</Text>
 					<Text style={styles.nameText}>{this.props.state.status}</Text>
 				</View>
-				{this.props.state.rejectionMessage?
-				(<View style={styles.methodStatus}>
-					<Text style={styles.nameText}>Rejection Message</Text>
-					<Text style={styles.nameText}>{this.props.state.rejectionMessage}</Text>
-				</View>):
-				(<View></View>)}
+				{this.props.state.rejectionMessage ?
+					(<View style={styles.methodStatus}>
+						<Text style={styles.nameText}>Rejection Message</Text>
+						<Text style={styles.nameText}>{this.props.state.rejectionMessage}</Text>
+					</View>) :
+					(<View></View>)}
 			</View>
 		)
 	}
@@ -121,7 +134,7 @@ class Bill extends React.Component {
 
 const styles = StyleSheet.create({
 	mainContainer: {
-		paddingHorizontal: 10,
+		paddingHorizontal: "3%",
 		backgroundColor: 'black',
 		flex: 1,
 	},
@@ -137,7 +150,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	header: {
-		color: Color.accent,
+		color: colors.accent,
 		fontSize: 20,
 	},
 	nameText: {
@@ -148,6 +161,7 @@ const styles = StyleSheet.create({
 	methodStatus: {
 		justifyContent: "space-between",
 		flexDirection: "row",
+		height:"10%",
 	},
 	repeatButton: {
 		marginTop: 30,
@@ -157,7 +171,13 @@ const styles = StyleSheet.create({
 		width: '95%',
 		alignSelf: "center",
 		alignItems: "center",
-		color: Color.primary,
-		backgroundColor: Color.accent,
+		color: colors.primary,
+		backgroundColor: colors.accent,
 	},
+	loading: {
+		flex: 1,
+		justifyContent: "center",
+		backgroundColor: colors.primary,
+		opacity: 0.5
+	}
 })

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, TextInput, ToastAndroid, AsyncStorage, Modal } from 'react-native';
-import Colors from '../constants/colors'
+import colors from '../constants/colors'
 import Toast from 'react-native-whc-toast';
 import {
     MaterialIndicator,
@@ -30,7 +30,7 @@ export default class LoginScreen extends Component {
                     .then(data => {
                         //const { userid } = data;
                         if (data['userid'] == null) {
-                            ToastAndroid.show('Invalid email/password', ToastAndroid.SHORT);
+                            this.refs.toast.showCenter('Imvalid Email/Password', Toast.Duration.short)
                         } else {
                             AsyncStorage.setItem('userToken', data['userid']);
                             AsyncStorage.setItem('fname',data['fname']);
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     inputs: {
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
-        borderBottomColor: Colors.accent,
+        borderBottomColor: colors.accent,
         borderWidth: 1,
         paddingLeft: 15,
         height: 35,
@@ -141,17 +141,17 @@ const styles = StyleSheet.create({
     },
     text: {
         marginTop: 30,
-        color: Colors.accent,
+        color: colors.accent,
         paddingLeft: 10,
         fontSize: 20,
     },
     button: {
-        backgroundColor: Colors.accent,
+        backgroundColor: colors.accent,
         color: 'blue',
         width: '89%',
         alignItems: "center",
         justifyContent: "center",
-        color: Colors.primary,
+        color: colors.primary,
         height: 40,
         borderRadius: 10,
         marginTop: 10,
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     loading: {
         flex: 1,
         justifyContent: "center",
-        backgroundColor: Colors.primary,
+        backgroundColor: colors.primary,
         opacity: 0.5
     }
 });
