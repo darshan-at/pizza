@@ -3,24 +3,43 @@ import {
     StyleSheet,
     View,
     FlatList,
-    AsyncStorage
+    AsyncStorage,
+    RefreshControl
 } from 'react-native'
 import BottomBar from '../components/BottomBar'
 import ListContainer from '../components/listContainer'
-import global from '../constants/global'
 import ToppingCards from '../components/toppingCards'
 
 export default class ToppingsSelection extends React.Component {
-    state = {
-        pizzas: [],
-        numColumns: 2,
-        selectedTopping: [],
-
+    constructor() {
+        super();
+        this.state = {
+            isRefreshing: false,
+            pizzas: [],
+            numColumns: 2,
+            selectedTopping: [],
+    
+        }
+        this._onRefresh = this._onRefresh.bind(this);
     }
     static navigationOptions = {
         title: "Select Toppings",
     }
-
+    getData() {
+        fetch("https://unfixed-walls.000webhostapp.com/pizzaMaking.php?table=toppings")
+            .then(response => response.json())
+            .then(data => {
+                data = data.map(item => {
+                    item.isSelect = false;                                      //adds the by default select state to each
+                    item.selectedClass = this.styles.mainContainer;             //item and default class 
+                    return item;
+                })
+                this.setState({ pizzas: data, isRefreshing: false})
+            })
+    }
+    _onRefresh() {
+        this.setState({isRefreshing: true}, this.getData());
+    }
     storeItem = async () => {
         try {
             await AsyncStorage.setItem("toppings", JSON.stringify(this.state.selectedTopping))    
@@ -31,22 +50,19 @@ export default class ToppingsSelection extends React.Component {
     }
 
     componentDidMount() {
-        fetch("https://unfixed-walls.000webhostapp.com/pizzaMaking.php?table=toppings")
-            .then(response => response.json())
-            .then(data => {
-                data = data.map(item => {
-                    item.isSelect = false;                                      //adds the by default select state to each
-                    item.selectedClass = this.styles.mainContainer;             //item and default class 
-                    return item;
-                })
-                this.setState({ pizzas: data })
-            }).catch(error => console.log("ERRRRRRR" + error));
+        this.getData();
     }
     render() {
         return (
             <View style={this.styles.container}>
                 <ListContainer>
                     <FlatList
+                        refreshControl = {
+                            <RefreshControl 
+                                refreshing = {this.state.isRefreshing}
+                                onRefresh = {this._onRefresh}
+                            />
+                        }
                         numColumns={this.state.numColumns}
                         keyExtractor={(item) => item.id}
                         data={this.state.pizzas}

@@ -4244,6 +4244,11 @@ react-native-keyboard-aware-view@0.0.14:
   resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-view/-/react-native-keyboard-aware-view-0.0.14.tgz#4cb0079c97a3f85172e451267e333db95cc70372"
   integrity sha1-TLAHnJej+FFy5FEmfjM9uVzHA3I=
 
+react-native-picker-module@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-picker-module/-/react-native-picker-module-1.3.1.tgz#6404f4c8515409c0816290b04bdd9cafa175cbf1"
+  integrity sha512-qhLynhQ1AaB1vrhGkzildxmxwz9nLTgACmjoCKWqMcIsNko/hWLrbwNSQJrNHOAALhr4zNhQaV2Kz8wybNLSDw==
+
 react-native-ratings@^6.3.0:
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-6.5.0.tgz#a1606ccba3c5b54eec8e6cfa4765a45cf0e4ab8d"
