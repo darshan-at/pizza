@@ -1,34 +1,49 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, AsyncStorage, TouchableOpacity, FlatList, Modal } from 'react-native';
+import { StyleSheet,
+    View,
+    Text,
+    AsyncStorage, 
+    TouchableOpacity, 
+    FlatList, 
+    Modal,
+    RefreshControl } from 'react-native';
 import colors from '../constants/colors';
 import {
     MaterialIndicator,
 } from 'react-native-indicators';
 export default class History extends Component {
 
+    constructor() {
+        super()
+        this.state = {
+            isRefreshing: false,
+            userid: null,
+            history: [],
+            loading: true,
+        }
+        this._onRefresh = this._onRefresh.bind(this)
+    }
+
     static navigationOptions = {
         title: "History"
     }
 
-    componentDidMount() {
+    getData() {
         let query = "https://unfixed-walls.000webhostapp.com/historyList.php?userid="
         AsyncStorage.getItem('userToken')
             .then((data) => this.setState({ userid: data }))
             .then(() => fetch(query + this.state.userid)
                 .then((response) => response.json())
                 .then((val) => this.setState({ history: val }))
-                .then(() => { this.setState({ loading: false }) })
-
-
+                .then(() => { this.setState({ loading: false, isRefreshing:false }) })
             )
-
-
     }
 
-    state = {
-        userid: null,
-        history: [],
-        loading: true,
+    componentDidMount() {
+        this.getData()
+    }
+    _onRefresh() {
+        this.setState({isRefreshing: true}, this.getData)
     }
 
     render() {
@@ -37,6 +52,12 @@ export default class History extends Component {
                 <View >
 
                     <FlatList
+                        refreshControl={
+                            <RefreshControl 
+                            refreshing={this.state.isRefreshing}
+                            onRefresh={this._onRefresh}
+                            />
+                        }
                         keyExtractor={(item) => item.id}
                         data={this.state.history}
                         renderItem={order =>
